@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">LM Arena</string>
+    <string name="notif_channel_name">LM Arena 세션</string>
+    <string name="notif_channel_desc">LM Arena 자동화가 백그라운드에서 실행 중일 때 표시됩니다.</string>
+    <string name="notif_title">LM Arena 실행 중</string>
+    <string name="notif_text_idle">대기 중</string>
+    <string name="notif_text_running">응답을 기다리는 중...</string>
+    <string name="notif_action_stop">중지</string>
+    <string name="accessibility_service_desc">Work 모드에서 사용자가 요청한 화면 조작(탭, 스크롤, 텍스트 입력)을 수행하기 위해 필요합니다. LM Arena가 명시적으로 지시한 동작만 수행하며, 별도로 데이터를 수집하거나 전송하지 않습니다.</string>
+</resources>

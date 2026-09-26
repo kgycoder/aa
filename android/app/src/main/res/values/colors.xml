@@ -1,0 +1,8 @@
+<resources>
+    <color name="ink">#141413</color>
+    <color name="bg">#FFFFFF</color>
+    <color name="bg_sidebar">#FAFAF9</color>
+    <color name="line">#E9E9E5</color>
+    <color name="success">#2C8F4F</color>
+    <color name="danger">#B23B3B</color>
+</resources>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- 네트워크: arena.ai 접속 + 로컬 루프백 HTTP 서버(UI) -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- JARVIS 음성 모드: 마이크 입력(네이티브 SpeechRecognizer 브리지) -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <!-- Work 모드(기기 자동 조작)를 백그라운드에서도 계속 실행하기 위한 포그라운드 서비스 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <!-- OEM 배터리 최적화 때문에 백그라운드 세션이 끊기는 것을 줄이기 위한 예외 요청 -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+
+    <!-- 알림/토스트로 진행 상황을 계속 보여주기 위함 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".LmArenaApp"
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:theme="@style/Theme.LmArena"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:usesCleartextTraffic="true"
+        android:supportsRtl="true"
+        android:hardwareAccelerated="true"
+        tools:targetApi="34">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:configChanges="orientation|screenSize|keyboardHidden|screenLayout|smallestScreenSize|uiMode"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.LmArena">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Google 로그인 등 window.open() 팝업을 위한 전용 WebView 액티비티
+             (Windows판의 "팝업 창만 보여주기"와 동일한 역할). -->
+        <activity
+            android:name=".PopupWebViewActivity"
+            android:exported="false"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:theme="@style/Theme.LmArena" />
+
+        <!-- Work 모드: 접근성 서비스로 다른 앱 화면을 관찰/조작한다
+             (Windows의 UI Automation + SendInput에 대응하는 안드로이드 공식 경로). -->
+        <service
+            android:name=".work.WorkAccessibilityService"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/accessibility_service_config" />
+        </service>
+
+        <!-- 로컬 HTTP 서버 + LM Arena 자동화 엔진을 백그라운드에서도 유지하는 포그라운드 서비스 -->
+        <service
+            android:name=".AutomationForegroundService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="LM Arena chat/agent automation session must keep running while the user works in other apps." />
+        </service>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/app"
+    android:id="@+id/rootContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <!-- 사용자가 실제로 쓰는 화면: 로컬 서버(원본 web_static 그대로)가 렌더링된다. -->
+    <WebView
+        android:id="@+id/uiWebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- 로그인/reCAPTCHA가 필요할 때만 전면에 드러나는 실제 arena.ai 자동화 창.
+         평소에는 GONE 상태로 백그라운드에서 세션을 유지한다. -->
+    <LinearLayout
+        android:id="@+id/automationOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/bg"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="12dp"
+            android:background="@color/bg_sidebar">
+
+            <TextView
+                android:id="@+id/automationOverlayTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="로그인이 필요합니다"
+                android:textColor="@color/ink"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/automationOverlayMinimize"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="숨기기"
+                android:textColor="@color/ink" />
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/automationWebView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/bootProgress"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/ink" />
+</FrameLayout>
